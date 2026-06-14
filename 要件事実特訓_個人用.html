@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>要件事実 特訓（個人用）</title>
+<style>
+:root{
+  --bg:#faf8f3; --card:#ffffff; --ink:#2c2c2a; --sub:#5f5e5a; --line:#e4e0d6;
+  --teal:#0f6e56; --teal-bg:#e1f5ee; --coral:#993c1d; --coral-bg:#faece7;
+  --amber:#854f0b; --amber-bg:#faeeda; --blue:#185fa5; --blue-bg:#e6f1fb;
+  --red:#a32d2d; --red-bg:#fcebeb; --green:#3b6d11; --green-bg:#eaf3de;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+  line-height:1.7;font-size:16px}
+header{padding:18px 16px 10px;text-align:center;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:20px;font-weight:700}
+header p{margin:4px 0 0;color:var(--sub);font-size:13px}
+.tabs{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;padding:12px 8px;
+  position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+.tab{padding:8px 14px;border:1px solid var(--line);background:var(--card);border-radius:999px;
+  cursor:pointer;font-size:14px;color:var(--sub)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{max-width:760px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 12px}
+.term-h{display:flex;align-items:baseline;gap:8px;cursor:pointer}
+.term-h b{font-size:17px}
+.term-h .yomi{color:var(--sub);font-size:12px}
+.term-h .chev{margin-left:auto;color:var(--sub);font-size:13px}
+.term-body{display:none;margin-top:10px}
+.term-body.open{display:block}
+.kv{display:grid;grid-template-columns:78px 1fr;gap:6px 10px;margin-top:6px;font-size:14.5px}
+.kv .k{color:var(--sub);font-size:13px}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;margin:2px 4px 2px 0}
+.pill.t{background:var(--teal-bg);color:var(--teal)} .pill.c{background:var(--coral-bg);color:var(--coral)}
+.pill.a{background:var(--amber-bg);color:var(--amber)} .pill.b{background:var(--blue-bg);color:var(--blue)}
+.tech b{font-size:16px}
+.tech .lbl{color:var(--sub);font-size:12.5px;margin-top:8px}
+.tech .ex{background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:4px;font-size:14px}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:var(--teal)}
+.q-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.q-stem{font-size:16.5px;font-weight:600;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);
+  border-radius:10px;padding:11px 14px;margin:0 0 8px;cursor:pointer;font-size:15px;line-height:1.6}
+.opt:hover{border-color:var(--ink)}
+.opt.sel{border-color:var(--blue);background:var(--blue-bg)}
+.opt.ok{border-color:var(--green);background:var(--green-bg)}
+.opt.ng{border-color:var(--red);background:var(--red-bg)}
+.opt .mk{font-weight:700;margin-right:8px}
+.btn{display:inline-block;border:none;border-radius:10px;padding:11px 20px;font-size:15px;
+  cursor:pointer;background:var(--ink);color:#fff;font-weight:600}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.fb{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:none}
+.fb.show{display:block}
+.fb .verdict{font-weight:700;font-size:16px;margin-bottom:8px}
+.fb .why{font-size:14px;margin:6px 0;padding-left:10px;border-left:3px solid var(--line)}
+.fb .why.good{border-color:var(--green)} .fb .why.bad{border-color:var(--red)}
+.fb .note{background:var(--teal-bg);color:#085041;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:14px}
+select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--card)}
+.muted{color:var(--sub);font-size:13px}
+.stat-row{display:flex;align-items:center;gap:10px;margin:10px 0}
+.stat-row .nm{flex:0 0 46%;font-size:14px}
+.stat-row .pct{flex:0 0 52px;text-align:right;font-size:13px;color:var(--sub)}
+.stat-row .b2{flex:1}
+.big{font-size:28px;font-weight:700}
+hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>要件事実 特訓</h1>
+  <p>個人用 ／ 用語の地図・テクニック図鑑・演習ループ</p>
+</header>
+<div class="tabs" id="tabs">
+  <div class="tab on" data-v="drill">演習</div>
+  <div class="tab" data-v="terms">用語の地図</div>
+  <div class="tab" data-v="tech">テクニック図鑑</div>
+  <div class="tab" data-v="weak">弱点</div>
+</div>
+<main id="main"></main>
+
+<script>
+/* ============ 罠（テクニック）図鑑 ============ */
+const TECH = {
+  T1:{n:"請求原因に足しすぎる罠", how:"原告が立証する事実に『引渡し』『未払い』など、条文の穴に無いものが混ざっていたら誤り。請求原因＝権利が発生する最小限だけ。",
+      ex:"売買代金請求の請求原因は『契約の成立』だけ。引渡し・代金未払いは入れない（未払いは弁済＝被告の抗弁の問題）。"},
+  T2:{n:"否認と抗弁の取り違え罠", how:"被告のセリフが請求原因と『両立するか』を見る。両立＝抗弁（した、でも〜）／両立しない＝否認（してない）。",
+      ex:"『契約はAでなくBだ』＝両立しない＝否認。『契約はした、でも払った』＝両立する＝抗弁。"},
+  T3:{n:"否認は立証責任を動かさない罠", how:"『積極否認したから否認者が立証する』は誤り。否認は相手の責任を争うだけ。理由を書く義務（規則）と立証責任は別。",
+      ex:"被告が理由付きで否認しても、契約成立の立証責任は原告に残ったまま。"},
+  T4:{n:"証明不要≠主張不要の罠", how:"顕著な事実は『証明』はいらない（179条）。でも主要事実なら弁論主義で『主張』は必要。両者を混同させてくる。",
+      ex:"時効期間が過ぎた日は顕著でも、時効の抗弁として被告が『主張』しなければ裁判所は使えない。"},
+  T5:{n:"弁論主義は主要事実だけの罠", how:"『当事者の主張がないと裁判所は認定できない』『自白に拘束される』のは主要事実のみ。間接・補助事実は裁判所が勝手に認定してよい。",
+      ex:"貸付け翌日の入金（間接事実）は、主張がなくても証拠から認定できる。"},
+  T6:{n:"諾成と要物の取り違え罠", how:"売買＝諾成（合意だけ）／消費貸借＝要物（合意＋交付）。要件事実の数が変わる。逆に書いた肢が誤り。",
+      ex:"貸金返還は『合意＋金銭の交付＋弁済期の到来』。交付が要る点が売買と違う。"},
+  T7:{n:"同時履行→引換給付の罠", how:"同時履行の抗弁が通ると『請求棄却』ではなく『〜と引換えに払え』の引換給付判決。棄却と書いたら誤り。",
+      ex:"『目的物の引渡しと引換えに代金を払え』が結論。権利阻止であって消滅ではない。"},
+  T8:{n:"登記に公信力なしの罠", how:"所有権に基づく明渡で、全部事項証明書を出すだけで所有が立証できる/立証責任が転換する、は誤り。登記に公信力・推定転換力はない。",
+      ex:"前所有者の所有が不明なら、現在の登記だけでは原告の所有を立証しきれない。"},
+  T9:{n:"自白の効果の罠", how:"裁判上の自白（主要事実）は裁判所を拘束し証拠調べ不要。撤回は原則できない（相手の同意か、真実に反し錯誤等が要る）。",
+      ex:"『契約したことは認める』＝自白成立。後から自由には撤回できない。"},
+  T10:{n:"真偽不明→立証責任の罠", how:"白黒つかないとき、裁判所は判決できないのではなく、立証責任を負う側を負けにする。半額認容などはしない。",
+      ex:"契約成立が真偽不明＝発生要件の立証責任を負う原告の負け＝請求棄却。"},
+  T11:{n:"違法事由(本案)と原告適格(訴訟要件)の罠", how:"取消訴訟で原告が出すのは『違法事由』（本案）。第三者はそれに加え『原告適格＝法律上の利益』（訴訟要件）も主張立証。『違法性の阻却』は刑法の語で無関係。",
+      ex:"第三者は、処分の違法（本案）＋自分に法律上の利益がある（入口）の両方が要る。"},
+  T12:{n:"消滅時効の要件事実の罠", how:"時効は援用権者（被告）が、起算点・期間の経過・援用の意思表示を主張立証する。時効は自動では効かない。",
+      ex:"被告が『時効を援用する』と言わなければ、期間が過ぎていても権利は消えない。"}
+};
+const TKEYS = Object.keys(TECH);
+
+/* ============ 用語の地図 ============ */
+const TERMS = [
+ {t:"訴訟物",y:"そしょうぶつ",p:"この裁判で争う『権利』そのもの。料理でいう献立名。",
+  e:"売買代金支払請求権／貸金返還請求権。これが決まると立証すべき材料（要件事実）が自動で決まる。",pa:"要件事実（権利を成立させる材料）",tr:null},
+ {t:"要件事実",y:"ようけんじじつ",p:"権利が法律上成立するための『最小限の事実』。条文の穴埋め。",
+  e:"売買代金請求なら『目的物と代金の合意』。穴に無い引渡し等は要らない。",pa:"主要事実と同義",tr:"T1"},
+ {t:"主要事実",y:"しゅようじじつ",p:"法律要件にそのまま当てはまる事実。＝要件事実。弁論主義が効く。",
+  e:"『売買の合意』。これは当事者が主張しないと裁判所は使えない。",pa:"間接事実・補助事実",tr:"T5"},
+ {t:"間接事実",y:"かんせつじじつ",p:"主要事実を『推認させる』だけの事実。弁論主義は効かない。",
+  e:"貸付け翌日にYの口座へ入金（→交付を推認）。主張なしでも認定可。",pa:"主要事実",tr:"T5"},
+ {t:"補助事実",y:"ほじょじじつ",p:"証拠の信用性に関わる事実。弁論主義は効かない。",
+  e:"借用書の署名が本人の筆跡（→文書の信用性）。",pa:"主要事実",tr:"T5"},
+ {t:"請求原因",y:"せいきゅうげんいん（Kg）",p:"原告が勝つために並べる要件事実のセット。『これだけ言えば一応勝てる』ライン。",
+  e:"売買代金なら契約の成立だけ。足すと立証しなくていいことまで背負う。",pa:"抗弁（被告の反撃）",tr:"T1"},
+ {t:"抗弁",y:"こうべん（E）",p:"被告の反撃。請求原因と両立しつつ効果を覆す。『した、でも〜』。",
+  e:"弁済・同時履行・消滅時効・錯誤取消し。立証責任は被告。",pa:"否認",tr:"T2"},
+ {t:"否認",y:"ひにん",p:"原告の事実を『違う』と争うだけ。『してない』。請求原因と両立しない。",
+  e:"単純否認＝『知らない』／積極否認＝『違う、なぜなら〜』。どちらも立証責任は原告に残る。",pa:"抗弁",tr:"T3"},
+ {t:"再抗弁",y:"さいこうべん（R）",p:"抗弁をさらに覆す原告の主張。攻防が交互に積み上がる。",
+  e:"弁済の抗弁に対し『その弁済は別の借金への充当だった』。",pa:"抗弁",tr:null},
+ {t:"弁論主義",y:"べんろんしゅぎ",p:"事実と証拠は当事者まかせ、という原則。3つのテーゼから成る。",
+  e:"①主張原則 ②自白の拘束力 ③職権証拠調べの禁止。適用は主要事実のみ。",pa:"職権探知主義",tr:"T5"},
+ {t:"立証責任",y:"りっしょうせきにん（証明責任）",p:"真偽不明のとき不利益を受ける地位。実体法で最初から固定。",
+  e:"権利発生＝原告／障害・消滅・阻止＝被告（法律要件分類説）。",pa:"主張責任",tr:"T10"},
+ {t:"主張責任",y:"しゅちょうせきにん",p:"主要事実が弁論に出てこないと負ける地位。弁論主義第1テーゼ由来。",
+  e:"立証責任の所在と原則一致する。抗弁事実は被告が主張責任を負う。",pa:"立証責任",tr:null},
+ {t:"法律要件分類説",y:"ほうりつようけんぶんるいせつ",p:"立証責任の配り方の通説。条文の構造で決まる。",
+  e:"発生要件＝原告、障害（錯誤）・消滅（弁済）・阻止（同時履行）＝被告。",pa:null,tr:"T10"},
+ {t:"自由心証主義",y:"じゆうしんしょうしゅぎ",p:"証拠の評価は裁判官の合理的判断にまかせる（247条）。ただし証拠ゼロで認定はできない。",
+  e:"間接事実の積み重ね＋経験則で主要事実を推認してよい。",pa:"法定証拠主義",tr:null},
+ {t:"証明度",y:"しょうめいど",p:"どこまで証明すれば足りるかの基準。民事は『高度の蓋然性』。",
+  e:"刑事の『合理的な疑いを超える証明』より緩い。過半数で決まるのではない。",pa:null,tr:null},
+ {t:"顕著な事実",y:"けんちょなじじつ",p:"公知・裁判所に職務上明らかな事実。証明は不要（179条）。",
+  e:"でも主要事実なら『主張』は必要。証明不要と主張不要は別。",pa:null,tr:"T4"},
+ {t:"諾成契約",y:"だくせいけいやく",p:"合意だけで成立する契約。",
+  e:"売買（555条）。要件事実は合意のみ。",pa:"要物契約",tr:"T6"},
+ {t:"要物契約",y:"ようぶつけいやく",p:"物の交付があって初めて成立する契約。",
+  e:"消費貸借（587条）。要件事実は合意＋交付。",pa:"諾成契約",tr:"T6"},
+ {t:"同時履行の抗弁",y:"どうじりこうのこうべん",p:"『先に渡せ、なら払う』（533条）。権利阻止の抗弁。",
+  e:"認められると請求棄却ではなく引換給付判決。",pa:null,tr:"T7"},
+ {t:"引換給付判決",y:"ひきかえきゅうふはんけつ",p:"『〜と引換えに払え』という条件付きの判決。",
+  e:"同時履行の抗弁が通ったときの結論。一部認容の一種。",pa:null,tr:"T7"},
+ {t:"原告適格",y:"げんこくてきかく",p:"取消訴訟を起こせる資格＝法律上の利益。訴訟要件（入口）。",
+  e:"第三者はこれを欠くと却下。本案の違法事由とは別の層。",pa:"違法事由（本案）",tr:"T11"},
+ {t:"消滅時効",y:"しょうめつじこう",p:"時の経過で権利が消える制度。自動では効かない。",
+  e:"援用権者（被告）が起算点・期間経過・援用を主張立証する。",pa:null,tr:"T12"}
+];
+
+/* ============ 問題バンク ============ */
+/* type:"select" → choices:[{t,ok,why}], 正解は ok:true の1つ
+   type:"count"  → stmts:[{t,ok,why}] ア〜エ, 正解＝okの個数（1=一つ…4=四つ） */
+const QS = [
+ {id:1,tech:["T1"],type:"select",
+  stem:"XがYに売買代金の支払を求める訴訟で、Xが請求原因として主張・立証すべき事実はどれか。",
+  choices:[
+   {t:"売買契約の成立（目的物と代金額の合意）",ok:true,why:"売買は諾成契約。請求原因はこの合意だけで必要十分。"},
+   {t:"売買契約の成立に加え、目的物を引き渡したこと",ok:false,why:"引渡しは代金債権の発生要件ではない。足しすぎ。"},
+   {t:"売買契約の成立に加え、代金がまだ支払われていないこと",ok:false,why:"未払いの立証は不要。弁済は被告の抗弁。"},
+   {t:"売買契約書が作成され、Yが署名押印したこと",ok:false,why:"契約書は証拠方法であって要件事実ではない。"}]},
+
+ {id:2,tech:["T2","T1"],type:"select",
+  stem:"Xが車両Aの売買代金500万円を請求している。次の記述のうち正しいものはどれか。",
+  choices:[
+   {t:"Yの『私が買ったのは車両Aでなく車両Bだ』との主張は抗弁である。",ok:false,why:"車両AかBかは請求原因と両立しない＝否認。抗弁ではない。"},
+   {t:"領収書に『2025年8月25日付・車両Aの売買代金として』との但書があれば、弁済の抗弁を立証できる。",ok:true,why:"どの債務への弁済かが特定され、本件債務の消滅を立証できる。"},
+   {t:"受領額・受領日・受領者・宛先の記載だけで、弁済の抗弁の立証として十分である。",ok:false,why:"どの債務への弁済か不明で、本件代金への充当を立証できない。"},
+   {t:"Xが別契約の車両Bの代金を受領していた事実も、請求原因として主張する必要がある。",ok:false,why:"別契約の話は本件の請求原因に無関係。足しすぎ。"}]},
+
+ {id:3,tech:["T3"],type:"select",
+  stem:"否認と抗弁に関する次の記述のうち、誤っているものはどれか。",
+  choices:[
+   {t:"被告の反論が請求原因事実と論理的に両立しないなら、それは否認である。",ok:false,why:"正しい。両立しない＝否認、両立する＝抗弁。"},
+   {t:"準備書面で相手方の主張事実を否認するときは、その理由を記載しなければならない。",ok:false,why:"正しい（積極否認＝理由付き否認の義務）。"},
+   {t:"積極否認をした者は、その否認した事実について主張立証責任を負う。",ok:true,why:"これが誤り。否認は相手の責任を争うだけで立証責任は移らない。理由記載の義務とは別。"},
+   {t:"抗弁とは、請求原因事実と両立しつつ、その法律効果を妨げる主張である。",ok:false,why:"正しい。抗弁の定義そのもの。"}]},
+
+ {id:4,tech:["T6","T1"],type:"select",
+  stem:"XがYに貸金100万円の返還を求める（民法587条の消費貸借）。Xが主張・立証すべき要件事実はどれか（期限の定めあり）。",
+  choices:[
+   {t:"返還の合意・金銭の交付・返還期限の到来",ok:true,why:"消費貸借は要物契約。合意＋交付＋弁済期の到来が要件事実。"},
+   {t:"返還の合意のみ",ok:false,why:"交付がなければ要物性を満たさない。売買と混同している。"},
+   {t:"金銭消費貸借契約書が存在すること",ok:false,why:"契約書は証拠方法であって要件事実ではない。"},
+   {t:"返還の合意・金銭の交付・利息の合意",ok:false,why:"元本返還請求に利息の合意は不要。"}]},
+
+ {id:5,tech:["T5"],type:"select",
+  stem:"弁論主義が適用される範囲として正しいものはどれか。",
+  choices:[
+   {t:"主要事実にのみ適用され、間接事実・補助事実には適用されない。",ok:true,why:"主張原則も自白の拘束力も、効くのは主要事実だけ。"},
+   {t:"主要事実・間接事実・補助事実のすべてに適用される。",ok:false,why:"間接・補助事実は裁判所が証拠から自由に認定できる。"},
+   {t:"間接事実には適用されるが、補助事実には適用されない。",ok:false,why:"適用範囲を取り違えている。"},
+   {t:"補助事実にのみ適用される。",ok:false,why:"逆。補助事実には適用されない。"}]},
+
+ {id:6,tech:["T4","T12"],type:"select",
+  stem:"乙が消滅時効の抗弁を主張する事案で、正しいものはどれか。",
+  choices:[
+   {t:"時効期間が満了する日が経過したことは顕著な事実だから、主張する必要はない。",ok:false,why:"証明は不要でも、主要事実は弁論主義で『主張』が必要。混同の罠。"},
+   {t:"時効は期間が過ぎれば自動的に効果が生じ、援用は不要である。",ok:false,why:"援用権者の援用の意思表示が必要。"},
+   {t:"時効を援用する被告が、起算点・期間の経過・援用の意思表示を主張立証する。",ok:true,why:"消滅は被告に立証責任。時効は自動では効かない。"},
+   {t:"時効の起算点は裁判所が職権で調査して認定する。",ok:false,why:"職権調査事項ではない。"}]},
+
+ {id:7,tech:["T7"],type:"select",
+  stem:"売買代金請求でYの同時履行の抗弁（533条）が認められた場合の判決はどれか。",
+  choices:[
+   {t:"目的物の引渡しと引換えに代金を支払え、との引換給付判決",ok:true,why:"権利阻止であって消滅ではないため、引換給付判決になる。"},
+   {t:"代金債権の行使が阻止される以上、請求は全部棄却される。",ok:false,why:"債権自体は存在するので全部棄却にはならない。"},
+   {t:"抗弁は判決に影響せず、請求は全部認容される。",ok:false,why:"抗弁が通った以上、無条件の全部認容にはならない。"},
+   {t:"訴訟要件を欠くとして訴え却下となる。",ok:false,why:"本案の問題であり訴訟要件の話ではない。"}]},
+
+ {id:8,tech:["T8"],type:"select",
+  stem:"所有権に基づく土地明渡請求で、原告の所有の立証について最も適切なものはどれか。",
+  choices:[
+   {t:"全部事項証明書上の所有者であっても、前所有者の所有が不明なら、それを提出するだけでは足りない。",ok:true,why:"登記に公信力がなく、登記名義＝所有とは限らないため。"},
+   {t:"現在の所有者と記録された全部事項証明書を出せば、常に所有の立証として足りる。",ok:false,why:"登記に公信力なし。『常に』足りるわけではない。"},
+   {t:"全部事項証明書が出れば、原告の所有でないことを被告が証明する責任を負う。",ok:false,why:"立証責任は転換しない。所有の立証責任は原告のまま。"},
+   {t:"全部事項証明書は公文書だから、記載どおりの所有が法律上推定される。",ok:false,why:"登記に所有権の法律上の推定力はない。"}]},
+
+ {id:9,tech:["T9"],type:"select",
+  stem:"口頭弁論でYが『Xと売買契約を締結したことは認める』と陳述した。その効果はどれか。",
+  choices:[
+   {t:"裁判上の自白が成立し、裁判所はこれと異なる認定ができず、証拠調べも不要となる。",ok:true,why:"主要事実の自白は裁判所を拘束する（第2テーゼ）。"},
+   {t:"証拠調べの結果次第で、裁判所は契約不成立と認定できる。",ok:false,why:"自白に拘束され、異なる認定はできない。"},
+   {t:"Yは理由を示さず自由にこの陳述を撤回できる。",ok:false,why:"撤回には相手方の同意か、真実に反し錯誤等の要件が要る。"},
+   {t:"自白の対象は証拠の信用性に限られ、この陳述に法的効果はない。",ok:false,why:"自白の対象はまさに主要事実である。"}]},
+
+ {id:10,tech:["T10"],type:"select",
+  stem:"売買代金請求で、審理を尽くしても契約成立が真偽不明だった。裁判所がすべき判決はどれか。",
+  choices:[
+   {t:"発生要件の立証責任を負うXの不利益とし、請求を棄却する。",ok:true,why:"真偽不明は立証責任の分配で決着。発生要件は原告の責任。"},
+   {t:"真偽不明である以上、裁判所は判決をすることができない。",ok:false,why:"真偽不明でも判決はしなければならない。そのための立証責任。"},
+   {t:"公平の見地から請求額の半額を認容する。",ok:false,why:"割合的解決は立証責任の制度と相容れない。"},
+   {t:"Yが契約不成立を立証できていない以上、請求を認容する。",ok:false,why:"立証責任の分配が逆。"}]},
+
+ {id:11,tech:["T11"],type:"select",
+  stem:"名宛人以外の第三者が処分の取消訴訟を提起する場合に関し、正しいものはどれか。",
+  choices:[
+   {t:"第三者は、本案の違法事由に加え、訴訟要件としての原告適格（法律上の利益）も主張立証しなければならない。",ok:true,why:"入口（原告適格）と中身（違法事由）の二層を要する。"},
+   {t:"第三者が主張すべきは『違法性の阻却』である。",ok:false,why:"違法性の阻却は刑法の概念で取消訴訟には無関係。"},
+   {t:"原告適格は本案の問題だから、欠けても却下ではなく請求棄却になる。",ok:false,why:"原告適格は訴訟要件。欠けると却下。"},
+   {t:"名宛人でない以上、第三者は処分の違法を主張する必要はない。",ok:false,why:"本案で違法事由の主張立証は当然必要。"}]},
+
+ {id:12,tech:["T2"],type:"count",
+  stem:"甲が乙に絵画の売買代金500万円を請求している。次のうち、乙の主張が『甲の請求原因に対する積極否認』に当たるものはいくつあるか。",
+  stmts:[
+   {t:"『絵画の引渡しを受けていない。引渡しと引換えなら500万円を払う。』",ok:false,why:"契約は認めており請求原因と両立＝同時履行の抗弁。否認ではない。"},
+   {t:"『絵画の引渡しは受けたが、この絵画は甲からもらった（贈与された）ものだ。』",ok:true,why:"売買か贈与かは両立しない＝積極否認。"},
+   {t:"『甲と契約したのは私ではなく、取引先のZである。』",ok:true,why:"契約当事者を争い請求原因と両立しない＝積極否認（理由付き否認）。"},
+   {t:"『契約はしたが、代金はすでに全額支払った。』",ok:false,why:"契約成立と両立し代金債権を消滅させる＝弁済の抗弁。"}]},
+
+ {id:13,tech:["T1","T6"],type:"count",
+  stem:"次の記述のうち、要件事実の理解として正しいものはいくつあるか。",
+  stmts:[
+   {t:"売買代金請求で、甲は代金の支払時期の到来を主張立証しなければならない。",ok:false,why:"売買代金の請求原因は契約の成立のみ。支払時期の到来は要件事実でない。"},
+   {t:"貸金返還請求で、期限の定めがない場合は、催告と相当期間の経過が必要となる。",ok:true,why:"591条1項。直ちには請求できない。"},
+   {t:"売買は諾成、消費貸借は要物であり、要件事実の数が異なる。",ok:true,why:"交付の要否で差が出る。考査頻出の対比。"},
+   {t:"契約書の存在は、売買でも消費貸借でも要件事実に含まれる。",ok:false,why:"契約書は証拠方法で、要件事実ではない。"}]},
+
+ {id:14,tech:["T5"],type:"select",
+  stem:"次のうち『主要事実』に当たるものはどれか（貸金返還請求の事案）。",
+  choices:[
+   {t:"XがYに現金100万円を交付した事実",ok:true,why:"金銭の交付は貸金返還請求の発生原因＝主要事実。"},
+   {t:"貸付け主張日の翌日にYの口座へ100万円が入金された事実",ok:false,why:"交付を推認させる間接事実。"},
+   {t:"借用書のYの署名が本人の筆跡である事実",ok:false,why:"文書の信用性に関わる補助事実。"},
+   {t:"Yが当時金銭に困っていた事実",ok:false,why:"動機を示す間接事実。"}]},
+
+ {id:15,tech:["T3","T2"],type:"select",
+  stem:"立証責任と否認・抗弁の関係について、正しいものはどれか。",
+  choices:[
+   {t:"原告は契約成立（発生要件）の立証責任を負い、被告は弁済（消滅要件）の立証責任を負う。",ok:true,why:"法律要件分類説。発生は原告、消滅は被告。"},
+   {t:"被告が否認すれば、その時点で立証責任は被告に移る。",ok:false,why:"否認は立証責任を動かさない。"},
+   {t:"立証責任は裁判所が事案ごとに自由に決める。",ok:false,why:"実体法の構造で定まる。"},
+   {t:"すべての立証責任は原告が負い、被告は反証にとどまる。",ok:false,why:"被告も抗弁事実の立証責任を負う。"}]}
+];
+
+/* ============ 進捗（localStorage） ============ */
+const LS="youken_tokkun_v1";
+let store=JSON.parse(localStorage.getItem(LS)||"{}"); // {qid:{seen,correct}}
+function save(){localStorage.setItem(LS,JSON.stringify(store));}
+function record(q,correct){
+  const k=String(q.id); store[k]=store[k]||{seen:0,correct:0};
+  store[k].seen++; if(correct)store[k].correct++; save();
+}
+function techStats(){
+  const m={}; TKEYS.forEach(k=>m[k]={seen:0,correct:0});
+  QS.forEach(q=>{const s=store[String(q.id)]; if(!s)return;
+    q.tech.forEach(tk=>{if(m[tk]){m[tk].seen+=s.seen;m[tk].correct+=s.correct;}});});
+  return m;
+}
+
+/* ============ 画面 ============ */
+const main=document.getElementById("main");
+let view="drill";
+document.getElementById("tabs").addEventListener("click",e=>{
+  const t=e.target.closest(".tab"); if(!t)return;
+  [...document.querySelectorAll(".tab")].forEach(x=>x.classList.toggle("on",x===t));
+  view=t.dataset.v; render();
+});
+
+/* --- 演習 state --- */
+let pool=[], pi=0, answered=false, onlyWrong=false;
+function buildPool(filterTech){
+  let arr=QS.slice();
+  if(filterTech&&filterTech!=="all") arr=arr.filter(q=>q.tech.includes(filterTech));
+  if(onlyWrong) arr=arr.filter(q=>{const s=store[String(q.id)];return s&&s.correct<s.seen;});
+  for(let i=arr.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[arr[i],arr[j]]=[arr[j],arr[i]];}
+  pool=arr; pi=0; answered=false;
+}
+let curFilter="all";
+
+function render(){
+  if(view==="drill")return renderDrill();
+  if(view==="terms")return renderTerms();
+  if(view==="tech")return renderTech();
+  if(view==="weak")return renderWeak();
+}
+
+function renderDrill(){
+  if(!pool.length) buildPool(curFilter);
+  let opts=`<option value="all">すべての罠</option>`+TKEYS.map(k=>`<option value="${k}" ${k===curFilter?"selected":""}>${k}：${TECH[k].n}</option>`).join("");
+  let head=`<div class="card"><div class="row">
+    <span class="muted">出題範囲</span>
+    <select id="filt">${opts}</select>
+    <label class="muted"><input type="checkbox" id="ow" ${onlyWrong?"checked":""}> 間違えた問題だけ</label>
+    <button class="btn ghost" id="reshuffle">引き直す</button>
+  </div></div>`;
+  if(!pool.length){main.innerHTML=head+`<div class="card">該当する問題がありません。条件を変えてください。</div>`;wireDrillHead();return;}
+  const q=pool[pi];
+  let body;
+  if(q.type==="select"){
+    body=q.choices.map((c,i)=>`<button class="opt" data-i="${i}"><span class="mk">${"１２３４"[i]}</span>${c.t}</button>`).join("");
+  }else{
+    const lt="アイウエ";
+    body=q.stmts.map((s,i)=>`<div class="opt" style="cursor:default"><span class="mk">${lt[i]}</span>${s.t}</div>`).join("")
+      +`<div style="margin-top:6px" class="muted">↓ 正しいものの個数を選ぶ</div>`
+      +[1,2,3,4].map(n=>`<button class="opt cnt" data-n="${n}"><span class="mk">${"１２３４"[n-1]}</span>${"一二三四"[n-1]}つ</button>`).join("");
+  }
+  const chips=q.tech.map(tk=>`<span class="pill a">${tk} ${TECH[tk].n}</span>`).join("");
+  main.innerHTML=head+`<div class="card">
+    <div class="q-meta muted">問 ${pi+1} / ${pool.length}</div>
+    <div class="q-stem">${q.stem}</div>
+    <div id="opts">${body}</div>
+    <div class="fb" id="fb"></div>
+    <div class="row" id="nav" style="display:none">
+      <button class="btn" id="next">次の問題 →</button>
+    </div>
+  </div>`;
+  wireDrillHead();
+  if(q.type==="select"){
+    [...document.querySelectorAll("#opts .opt")].forEach(b=>b.onclick=()=>answerSelect(q,+b.dataset.i));
+  }else{
+    [...document.querySelectorAll("#opts .cnt")].forEach(b=>b.onclick=()=>answerCount(q,+b.dataset.n));
+  }
+  document.getElementById("next").onclick=()=>{pi++;if(pi>=pool.length){buildPool(curFilter);} answered=false; render();};
+}
+function wireDrillHead(){
+  const f=document.getElementById("filt"); if(f)f.onchange=()=>{curFilter=f.value;buildPool(curFilter);render();};
+  const ow=document.getElementById("ow"); if(ow)ow.onchange=()=>{onlyWrong=ow.checked;buildPool(curFilter);render();};
+  const rs=document.getElementById("reshuffle"); if(rs)rs.onclick=()=>{buildPool(curFilter);render();};
+}
+function showFb(q,correct,htmlWhy){
+  const fb=document.getElementById("fb");
+  const note=q.tech.map(tk=>`<div><b>${TECH[tk].n}</b>：${TECH[tk].how}</div>`).join("");
+  fb.innerHTML=`<div class="verdict" style="color:${correct?'var(--green)':'var(--red)'}">${correct?'正解':'不正解'}</div>`
+    +htmlWhy+`<div class="note"><b>この問題が訓練する罠</b><br>${note}</div>`;
+  fb.classList.add("show");
+  document.getElementById("nav").style.display="flex";
+}
+function answerSelect(q,i){
+  if(answered)return; answered=true;
+  const correctIdx=q.choices.findIndex(c=>c.ok);
+  const correct=i===correctIdx;
+  [...document.querySelectorAll("#opts .opt")].forEach((b,bi)=>{
+    b.onclick=null;
+    if(bi===correctIdx)b.classList.add("ok");
+    else if(bi===i)b.classList.add("ng");
+  });
+  const why=q.choices.map((c,bi)=>`<div class="why ${c.ok?'good':'bad'}">${"１２３４"[bi]} ${c.ok?'○':'×'}　${c.why}</div>`).join("");
+  record(q,correct); showFb(q,correct,why);
+}
+function answerCount(q,n){
+  if(answered)return; answered=true;
+  const ans=q.stmts.filter(s=>s.ok).length;
+  const correct=n===ans;
+  [...document.querySelectorAll("#opts .cnt")].forEach(b=>{b.onclick=null;
+    const bn=+b.dataset.n; if(bn===ans)b.classList.add("ok"); else if(bn===n)b.classList.add("ng");});
+  const lt="アイウエ";
+  const why=q.stmts.map((s,i)=>`<div class="why ${s.ok?'good':'bad'}">${lt[i]} ${s.ok?'○正':'×誤'}　${s.why}</div>`).join("")
+    +`<div class="why">正しいのは <b>${"一二三四"[ans-1]}つ</b>。</div>`;
+  record(q,correct); showFb(q,correct,why);
+}
+
+function renderTerms(){
+  main.innerHTML=`<div class="card muted">難解な用語を「平易な言い換え＋具体例＋対の概念＋つながる罠」で。タップで開きます。</div>`
+   +TERMS.map((t,i)=>`<div class="card">
+     <div class="term-h" data-i="${i}"><b>${t.t}</b><span class="yomi">${t.y}</span><span class="chev">▼</span></div>
+     <div class="term-body" id="tb${i}">
+       <div class="kv"><span class="k">ひとことで</span><span>${t.p}</span></div>
+       <div class="kv"><span class="k">具体例</span><span>${t.e}</span></div>
+       ${t.pa?`<div class="kv"><span class="k">対の概念</span><span>${t.pa}</span></div>`:""}
+       ${t.tr?`<div style="margin-top:8px"><span class="pill a">つながる罠：${TECH[t.tr].n}</span></div>`:""}
+     </div></div>`).join("");
+  [...document.querySelectorAll(".term-h")].forEach(h=>h.onclick=()=>{
+    document.getElementById("tb"+h.dataset.i).classList.toggle("open");
+    h.querySelector(".chev").textContent=document.getElementById("tb"+h.dataset.i).classList.contains("open")?"▲":"▼";
+  });
+}
+
+function renderTech(){
+  const ts=techStats();
+  main.innerHTML=`<div class="card muted">出題者が毎年狙うツボ。見分け方を覚え、演習で正答率を上げる。</div>`
+   +TKEYS.map(k=>{
+     const s=ts[k]; const pct=s.seen?Math.round(s.correct/s.seen*100):null;
+     return `<div class="card tech">
+       <b>${k}　${TECH[k].n}</b>
+       <div class="lbl">見分け方</div><div>${TECH[k].how}</div>
+       <div class="lbl">例</div><div class="ex">${TECH[k].ex}</div>
+       <div class="lbl">あなたの正答率</div>
+       ${pct===null?`<div class="muted">未演習</div>`:`<div class="bar"><i style="width:${pct}%"></i></div><div class="muted">${pct}％（${s.correct}/${s.seen}）</div>`}
+     </div>`;}).join("");
+}
+
+function renderWeak(){
+  const ts=techStats();
+  const rows=TKEYS.map(k=>{const s=ts[k];return{k,seen:s.seen,correct:s.correct,pct:s.seen?s.correct/s.seen:-1};});
+  const done=rows.filter(r=>r.seen>0).sort((a,b)=>a.pct-b.pct);
+  const tot=Object.values(store).reduce((a,s)=>a+s.seen,0);
+  const totc=Object.values(store).reduce((a,s)=>a+s.correct,0);
+  let html=`<div class="card" style="text-align:center">
+     <div class="muted">総演習</div><div class="big">${tot} 問</div>
+     <div class="muted">正答率 ${tot?Math.round(totc/tot*100):0}％</div></div>`;
+  if(!done.length){html+=`<div class="card">まず演習を解くと、弱い罠がここに並びます。</div>`;}
+  else{
+    html+=`<div class="card"><b>弱い罠ワースト順</b><div class="muted">ここが埋まったら、Claudeに「この罠の新問を出して」と頼む。</div><hr class="soft">`
+     +done.map(r=>`<div class="stat-row">
+        <span class="nm">${r.k} ${TECH[r.k].n}</span>
+        <span class="b2"><span class="bar"><i style="width:${Math.round(r.pct*100)}%;background:${r.pct<0.6?'var(--coral)':'var(--teal)'}"></i></span></span>
+        <span class="pct">${Math.round(r.pct*100)}%</span></div>`).join("")
+     +`</div>`;
+  }
+  html+=`<div class="card"><button class="btn ghost" id="reset">進捗をリセット</button></div>`;
+  main.innerHTML=html;
+  document.getElementById("reset").onclick=()=>{if(confirm("進捗を消去しますか？")){store={};save();render();}};
+}
+
+render();
+</script>
+</body>
+</html>
