@@ -98,12 +98,17 @@ hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
 
 <script>
 /* ============================================================
-   キャッシュ対策（GitHub Pages 用）／自動更新・版数表示
-   ・ページを開くたびに最新版を確認し、古ければ別URLへ遷移して更新
+   キャッシュ対策・自動更新・版数表示（Web版／ダウンロード版 両対応）
    ・右下に現在の版数を表示
-   ・内容を更新したら必ず下の APP_VERSION の値を上げること
+   ・Webで開いた場合：古ければ自動で最新版に切り替え
+   ・ダウンロードして開いた場合：新版が公開されていれば
+     画面上部に「新しい版があります」通知＋最新版へのリンクを表示
+   ・内容を更新したら必ず下の APP_VERSION の値を1つ上げること
    ============================================================ */
-const APP_VERSION = '2026-06-24-05';
+const APP_VERSION = '2026-06-24-06';
+/* 公開URL（ダウンロード版の更新リンク先）と、版数確認用URL（CORS対応のraw） */
+const LIVE_URL = 'https://yosk4026.github.io/youken-tokkun/';
+const RAW_URL  = 'https://raw.githubusercontent.com/yosk4026/youken-tokkun/main/index.html';
 (function showVersionBadge(){
   try{
     function add(){
@@ -120,18 +125,45 @@ const APP_VERSION = '2026-06-24-05';
 })();
 (function checkForUpdate(){
   try{
-    fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' })
+    var isWeb = (location.protocol === 'http:' || location.protocol === 'https:');
+    /* Webは自分自身（同一オリジン）、ダウンロード版はrawから最新版数を取得 */
+    var url = isWeb ? (location.pathname + '?_=' + Date.now())
+                    : (RAW_URL + '?_=' + Date.now());
+    fetch(url, { cache:'no-store' })
       .then(function(r){ return r.ok ? r.text() : Promise.reject(); })
       .then(function(text){
         var m = text.match(/APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
         if(!m) return;
         var latest = m[1];
-        if(latest === APP_VERSION) return;
-        if(location.search.indexOf('v=' + latest) !== -1) return;
-        location.replace(location.pathname + '?v=' + encodeURIComponent(latest));
+        if(latest === APP_VERSION) return; /* 既に最新 */
+        if(isWeb){
+          /* Web版：URLを変えてキャッシュを回避し、自動で最新へ */
+          if(location.search.indexOf('v=' + latest) === -1){
+            location.replace(location.pathname + '?v=' + encodeURIComponent(latest));
+          }
+        } else {
+          /* ダウンロード版：上部に更新通知バナーを表示 */
+          showUpdateBanner(latest);
+        }
       })
       .catch(function(){});
   }catch(e){}
+  function showUpdateBanner(latest){
+    function add(){
+      var bar=document.createElement('div');
+      bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:10000;'
+        +'background:#854f0b;color:#fff;padding:10px 12px;text-align:center;'
+        +'font-size:14px;font-family:system-ui,sans-serif;'
+        +'box-shadow:0 2px 6px rgba(0,0,0,.2);';
+      bar.innerHTML='新しい版（v'+latest+'）が公開されています　'
+        +'<a href="'+LIVE_URL+'" target="_blank" rel="noopener" '
+        +'style="color:#fff;font-weight:700;text-decoration:underline">→ 最新版を開く</a>'
+        +'<span style="margin-left:14px;cursor:pointer;opacity:.85" '
+        +'onclick="this.parentNode.remove()">✕</span>';
+      document.body.appendChild(bar);
+    }
+    if(document.body) add(); else document.addEventListener('DOMContentLoaded', add);
+  }
 })();
 
 /* ============================================================
