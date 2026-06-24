@@ -6,26 +6,31 @@
 <title>考査 特訓</title>
 <style>
 :root{
-  --bg:#faf8f3; --card:#ffffff; --ink:#2c2c2a; --sub:#5f5e5a; --line:#e4e0d6;
-  --teal:#0f6e56; --teal-bg:#e1f5ee; --coral:#993c1d; --coral-bg:#faece7;
-  --amber:#854f0b; --amber-bg:#faeeda; --blue:#185fa5; --blue-bg:#e6f1fb;
-  --red:#a32d2d; --red-bg:#fcebeb; --green:#3b6d11; --green-bg:#eaf3de;
+  --bg:#0f1b30; --card:#16243d; --card2:#1d2e4c; --ink:#e9eef6; --sub:#9aa7bd; --line:#2b3a58;
+  --accent:#2f6bf0; --accent-d:#2a5fd6;
+  --teal:#7fe0c0; --teal-bg:#123a31; --coral:#f2a07a; --coral-bg:#3a2117;
+  --amber:#e8c074; --amber-bg:#33270f; --blue:#8fbcf2; --blue-bg:#13294a;
+  --red:#f29a9a; --red-bg:#3a1c1c; --green:#8fd673; --green-bg:#1c3416;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
   font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
-  line-height:1.7;font-size:16px}
-header{padding:16px 16px 8px;text-align:center;border-bottom:1px solid var(--line)}
-header h1{margin:0;font-size:20px;font-weight:700}
-header p{margin:4px 0 0;color:var(--sub);font-size:13px}
-.subjbar{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px 8px 0}
-.tabs{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;padding:10px 8px;
+  line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+header{padding:18px 16px 8px;max-width:760px;margin:0 auto}
+header .ttl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+header h1{margin:0;font-size:21px;font-weight:700;letter-spacing:.02em}
+.chip{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.chip.accent{background:var(--accent);color:#fff}
+.chip.dark{background:var(--card2);color:var(--sub);border:1px solid var(--line)}
+header p{margin:7px 0 0;color:var(--sub);font-size:13px}
+.subjbar{display:flex;gap:8px;align-items:center;max-width:760px;margin:0 auto;padding:12px 16px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;max-width:760px;margin:8px auto 0;padding:10px 16px;
   position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
 .tab{padding:8px 14px;border:1px solid var(--line);background:var(--card);border-radius:999px;
   cursor:pointer;font-size:14px;color:var(--sub)}
-.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 main{max-width:760px;margin:0 auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 12px}
 .term-h{display:flex;align-items:baseline;gap:8px;cursor:pointer}
 .term-h b{font-size:17px}
 .term-h .yomi{color:var(--sub);font-size:12px}
@@ -41,27 +46,28 @@ main{max-width:760px;margin:0 auto;padding:16px}
 .tech .lbl{color:var(--sub);font-size:12.5px;margin-top:8px}
 .tech .ex{background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:4px;font-size:14px}
 .bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}
-.bar>i{display:block;height:100%;background:var(--teal)}
+.bar>i{display:block;height:100%;background:var(--accent)}
 .q-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .q-stem{font-size:16.5px;font-weight:600;margin:6px 0 14px}
-.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);
-  border-radius:10px;padding:11px 14px;margin:0 0 8px;cursor:pointer;font-size:15px;line-height:1.6}
-.opt:hover{border-color:var(--ink)}
-.opt.sel{border-color:var(--blue);background:var(--blue-bg)}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card2);
+  border-radius:10px;padding:11px 14px;margin:0 0 8px;cursor:pointer;font-size:15px;line-height:1.6;color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--blue-bg)}
 .opt.ok{border-color:var(--green);background:var(--green-bg)}
 .opt.ng{border-color:var(--red);background:var(--red-bg)}
 .opt .mk{font-weight:700;margin-right:8px}
 .btn{display:inline-block;border:none;border-radius:10px;padding:11px 20px;font-size:15px;
-  cursor:pointer;background:var(--ink);color:#fff;font-weight:600}
-.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  cursor:pointer;background:var(--accent);color:#fff;font-weight:600}
+.btn:hover{background:var(--accent-d)}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .fb{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:none}
 .fb.show{display:block}
 .fb .verdict{font-weight:700;font-size:16px;margin-bottom:8px}
 .fb .why{font-size:14px;margin:6px 0;padding-left:10px;border-left:3px solid var(--line)}
 .fb .why.good{border-color:var(--green)} .fb .why.bad{border-color:var(--red)}
-.fb .note{background:var(--teal-bg);color:#085041;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:14px}
-select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--card)}
+.fb .note{background:var(--teal-bg);color:#d7f0e7;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:14px}
+select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--card2);color:var(--ink)}
 .muted{color:var(--sub);font-size:13px}
 .stat-row{display:flex;align-items:center;gap:10px;margin:10px 0}
 .stat-row .nm{flex:0 0 46%;font-size:14px}
@@ -71,14 +77,15 @@ select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size
 hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
 .ctbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
 .ctbl th,.ctbl td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
-.ctbl th{background:var(--bg);font-weight:600}
+.ctbl th{background:var(--card2);font-weight:600}
 .ctbl .hl{color:var(--coral);font-weight:600}
+footer{max-width:760px;margin:8px auto 36px;padding:16px;text-align:center;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
 <header>
-  <h1>考査 特訓</h1>
-  <p>科目別 罠＆コア表トレーニング</p>
+  <div class="ttl"><h1>考査 特訓</h1><span class="chip accent">2026年度版</span><span class="chip dark">全6カテゴリー</span></div>
+  <p>科目別 罠＆コア表トレーニング ／ 令和8年改正対応</p>
 </header>
 <div class="subjbar">
   <span class="muted">科目</span>
@@ -92,6 +99,7 @@ hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
   <div class="tab" data-v="weak">弱点</div>
 </div>
 <main id="main"></main>
+<footer>特定行政書士 考査特訓ツール ／ 制作・著作　行政書士 吉岡康生事務所</footer>
 
 <script>
 /* ============================================================
