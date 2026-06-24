@@ -100,6 +100,31 @@ hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
 
 <script>
 /* ============================================================
+   自動更新チェック（GitHub Pages 用）
+   ・ページを開くたびに、裏でサーバー上の最新版を取得してバージョンを比較
+   ・古ければ一度だけ自動リロードして最新を反映（無限ループ防止ガード付き）
+   ・HTMLを更新したら、必ず下の APP_VERSION の値も上げること
+   ============================================================ */
+const APP_VERSION = '2026-06-24-01';
+(function checkForUpdate(){
+  try{
+    fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' })
+      .then(function(r){ return r.ok ? r.text() : Promise.reject(); })
+      .then(function(text){
+        var m = text.match(/APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+        if(!m) return;
+        var latest = m[1];
+        if(latest === APP_VERSION){ sessionStorage.removeItem('__appReloadedFor'); return; }
+        /* 最新版あり。同一バージョンへの再リロードは1回までに制限してループを防ぐ */
+        if(sessionStorage.getItem('__appReloadedFor') === latest) return;
+        sessionStorage.setItem('__appReloadedFor', latest);
+        location.reload();
+      })
+      .catch(function(){});
+  }catch(e){}
+})();
+
+/* ============================================================
    多科目データ：SUBJECTS[科目id] = {label, LS, TECH, TERMS, QS, core}
    ============================================================ */
 const SUBJECTS = {
