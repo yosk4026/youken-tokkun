@@ -108,7 +108,23 @@ hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
    ・無限ループ防止：既に最新版URLを開いている場合は何もしない
    ・HTMLを更新したら、必ず下の APP_VERSION の値も上げること
    ============================================================ */
-const APP_VERSION = '2026-06-24-02';
+const APP_VERSION = '2026-06-24-03';
+/* 画面右下に現在の版数を小さく表示（どの版が読み込まれたか一目で分かるように） */
+(function showVersionBadge(){
+  try{
+    function add(){
+      var b=document.createElement('div');
+      b.textContent='v'+APP_VERSION;
+      b.style.cssText='position:fixed;right:6px;bottom:6px;z-index:9999;'
+        +'font-size:11px;color:#8a877f;background:rgba(255,255,255,.85);'
+        +'padding:2px 6px;border:1px solid #e4e0d6;border-radius:6px;'
+        +'font-family:system-ui,sans-serif;pointer-events:none;';
+      document.body.appendChild(b);
+    }
+    if(document.body) add();
+    else document.addEventListener('DOMContentLoaded', add);
+  }catch(e){}
+})();
 (function checkForUpdate(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' })
