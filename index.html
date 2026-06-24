@@ -102,10 +102,13 @@ hr.soft{border:none;border-top:1px solid var(--line);margin:14px 0}
 /* ============================================================
    自動更新チェック（GitHub Pages 用）
    ・ページを開くたびに、裏でサーバー上の最新版を取得してバージョンを比較
-   ・古ければ一度だけ自動リロードして最新を反映（無限ループ防止ガード付き）
+   ・古ければ URL にバージョン番号を付けた別URLへ遷移して最新を反映
+     （location.reload() は iOS Safari だとキャッシュから古いHTMLを
+       読み直してしまうため、別URLへの遷移で確実にキャッシュを回避する）
+   ・無限ループ防止：既に最新版URLを開いている場合は何もしない
    ・HTMLを更新したら、必ず下の APP_VERSION の値も上げること
    ============================================================ */
-const APP_VERSION = '2026-06-24-01';
+const APP_VERSION = '2026-06-24-02';
 (function checkForUpdate(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' })
@@ -114,11 +117,11 @@ const APP_VERSION = '2026-06-24-01';
         var m = text.match(/APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
         if(!m) return;
         var latest = m[1];
-        if(latest === APP_VERSION){ sessionStorage.removeItem('__appReloadedFor'); return; }
-        /* 最新版あり。同一バージョンへの再リロードは1回までに制限してループを防ぐ */
-        if(sessionStorage.getItem('__appReloadedFor') === latest) return;
-        sessionStorage.setItem('__appReloadedFor', latest);
-        location.reload();
+        if(latest === APP_VERSION) return; /* 既に最新 */
+        /* 既に最新版URLを開いているのに古い場合はループ防止のため停止 */
+        if(location.search.indexOf('v=' + latest) !== -1) return;
+        /* ナビゲーションURL自体を変えて Safari のHTTPキャッシュを確実にバイパス */
+        location.replace(location.pathname + '?v=' + encodeURIComponent(latest));
       })
       .catch(function(){});
   }catch(e){}
