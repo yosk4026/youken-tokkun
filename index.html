@@ -2320,7 +2320,7 @@ function renderWeak(){
      <div class="muted">正答率 ${tot?Math.round(totc/tot*100):0}％</div></div>`;
   if(!done.length){html+=`<div class="card">まず演習を解くと、弱い罠がここに並びます。</div>`;}
   else{
-    html+=`<div class="card"><b>弱い罠ワースト順</b><div class="muted">ここが埋まったら、Claudeに「この罠の新問を出して」と頼む。</div><hr class="soft">`
+    html+=`<div class="card"><b>弱い罠ワースト順</b><div class="muted">正答率の低い罠から、重点的に復習しよう。</div><hr class="soft">`
      +done.map(r=>`<div class="stat-row">
         <span class="nm">${r.k} ${S().TECH[r.k].n}</span>
         <span class="b2"><span class="bar"><i style="width:${Math.round(r.pct*100)}%;background:${r.pct<0.6?'var(--coral)':'var(--teal)'}"></i></span></span>
